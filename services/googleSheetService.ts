@@ -2,15 +2,16 @@ import { Bet, BetStatus, Transaction, TransactionType } from '../types';
 
 // The key used to store the Google Sheet URL in localStorage.
 const URL_STORAGE_KEY = 'googleSheetWebAppUrl';
+const DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbyPtE3cfIvhnYeds3czJN1QY3k2758O0Ty47rbkStg_YtXfM9-TnGf2FM7aikQ5hHSYUg/exec';
 
 // --- Configuration Functions ---
 
 /**
- * Retrieves the Google Sheet Web App URL from localStorage.
- * @returns {string | null} The URL if it exists, otherwise null.
+ * Retrieves the Google Sheet Web App URL from localStorage or uses the default.
+ * @returns {string} The URL.
  */
-export const getGoogleSheetUrl = (): string | null => {
-  return localStorage.getItem(URL_STORAGE_KEY);
+export const getGoogleSheetUrl = (): string => {
+  return localStorage.getItem(URL_STORAGE_KEY) || DEFAULT_URL;
 };
 
 /**
