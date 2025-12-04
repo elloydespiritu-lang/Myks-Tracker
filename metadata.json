@@ -1,0 +1,6 @@
+{
+  "name": "Myks Tracker",
+  "description": "A sophisticated tracker application that monitors wagers and financial transactions, calculating key performance statistics. It syncs with a Google Sheet database and features a fully mobile-responsive interface.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
