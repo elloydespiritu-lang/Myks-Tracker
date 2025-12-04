@@ -39,9 +39,9 @@ export const BetList: React.FC<BetListProps> = ({ bets, isLoading, updatingBetId
   }
 
   return (
-    <div className="bg-gray-800/50 rounded-lg overflow-x-auto">
-      <table className="min-w-full">
-        <thead className="bg-gray-700/50">
+    <div className="bg-gray-800/50 rounded-lg overflow-auto max-h-[70vh] shadow-inner relative custom-scrollbar">
+      <table className="min-w-full relative border-collapse">
+        <thead className="bg-gray-800 sticky top-0 z-10 shadow-md">
           <tr>
             <th scope="col" className="p-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Bet</th>
             <th scope="col" className="p-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>

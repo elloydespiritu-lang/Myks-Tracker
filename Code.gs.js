@@ -33,10 +33,12 @@ function initializeSheet(sheetName, requiredHeaders) {
     return sheet;
   }
 
+  // Ensure top row is frozen for better UX even if sheet exists
+  sheet.setFrozenRows(1);
+
   if (sheet.getLastRow() < 1) {
     // Sheet exists but is empty.
     sheet.getRange(1, 1, 1, requiredHeaders.length).setValues([requiredHeaders]);
-    sheet.setFrozenRows(1);
     return sheet;
   }
   
