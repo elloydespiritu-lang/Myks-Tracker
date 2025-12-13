@@ -5,6 +5,7 @@ import { Spinner } from './Spinner';
 
 interface BetListProps {
   bets: Bet[];
+  betBalances: Record<string, { start: number; end: number }>;
   isLoading: boolean;
   updatingBetId: string | null;
   onUpdateStatus: (id: string, status: BetStatus) => void;
@@ -13,7 +14,7 @@ interface BetListProps {
   totalBetsCount: number;
 }
 
-export const BetList: React.FC<BetListProps> = ({ bets, isLoading, updatingBetId, onUpdateStatus, onDelete, onEdit, totalBetsCount }) => {
+export const BetList: React.FC<BetListProps> = ({ bets, betBalances, isLoading, updatingBetId, onUpdateStatus, onDelete, onEdit, totalBetsCount }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -45,9 +46,11 @@ export const BetList: React.FC<BetListProps> = ({ bets, isLoading, updatingBetId
           <tr>
             <th scope="col" className="p-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Bet</th>
             <th scope="col" className="p-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
+            <th scope="col" className="p-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Start Bal</th>
             <th scope="col" className="p-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Stake</th>
             <th scope="col" className="p-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Odds</th>
             <th scope="col" className="p-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Payout</th>
+            <th scope="col" className="p-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">End Bal</th>
             <th scope="col" className="p-4 text-center text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
             <th scope="col" className="p-4 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
           </tr>
@@ -57,6 +60,8 @@ export const BetList: React.FC<BetListProps> = ({ bets, isLoading, updatingBetId
             <BetItem 
               key={bet.id}
               bet={bet}
+              startBalance={betBalances[bet.id]?.start}
+              endingBalance={betBalances[bet.id]?.end}
               onUpdateStatus={onUpdateStatus}
               onDelete={onDelete}
               onEdit={onEdit}

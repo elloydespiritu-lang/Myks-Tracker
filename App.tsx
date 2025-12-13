@@ -14,7 +14,7 @@ import { Icon } from './components/Icon';
 import { Spinner } from './components/Spinner';
 import { Logo } from './components/Logo';
 import { setGoogleSheetUrl, getGoogleSheetUrl } from './services/googleSheetService';
-import { Bet, TransactionType, BetStatus } from './types';
+import { Bet, Transaction, TransactionType, BetStatus } from './types';
 
 type ActiveView = 'bets' | 'transactions';
 
@@ -39,6 +39,44 @@ export default function App() {
 
   const appError = betsError || transactionsError;
   const isLoading = isLoadingBets || isLoadingTransactions;
+
+  // Calculate running balances for bets
+  const betBalances = useMemo(() => {
+    const events = [
+      ...bets.map(b => ({ type: 'bet', data: b, date: new Date(b.createdAt).getTime() })),
+      ...transactions.map(t => ({ type: 'tx', data: t, date: new Date(t.createdAt).getTime() }))
+    ];
+    
+    // Sort by date ascending to process the ledger chronologically
+    events.sort((a, b) => a.date - b.date);
+
+    let currentBalance = 0;
+    const balances: Record<string, { start: number; end: number }> = {};
+
+    for (const event of events) {
+      if (event.type === 'tx') {
+        const tx = event.data as Transaction;
+        if (tx.type === TransactionType.DEPOSIT) {
+          currentBalance += tx.amount;
+        } else {
+          currentBalance -= tx.amount;
+        }
+      } else {
+        const bet = event.data as Bet;
+        const startBalance = currentBalance; // Balance before bet is placed
+
+        // Balance is deducted when bet is placed
+        currentBalance -= bet.stake;
+        // Balance is added back + profit if won
+        if (bet.status === BetStatus.WON) {
+          currentBalance += bet.payout;
+        }
+        // Store the balance state associated with this bet
+        balances[bet.id] = { start: startBalance, end: currentBalance };
+      }
+    }
+    return balances;
+  }, [bets, transactions]);
 
   const stats = useMemo(() => {
     // Bet stats
@@ -291,6 +329,7 @@ export default function App() {
               />
                <BetList 
                   bets={paginatedBets} 
+                  betBalances={betBalances}
                   isLoading={isLoadingBets && bets.length === 0} 
                   updatingBetId={updatingBetId}
                   onUpdateStatus={updateBetStatus} 

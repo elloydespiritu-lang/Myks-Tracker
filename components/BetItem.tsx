@@ -4,6 +4,8 @@ import { Icon } from './Icon';
 
 interface BetItemProps {
   bet: Bet;
+  startBalance?: number;
+  endingBalance?: number;
   onUpdateStatus: (id: string, status: BetStatus) => void;
   onDelete: (id: string) => void;
   onEdit: (bet: Bet) => void;
@@ -22,7 +24,7 @@ const statusRowStyles: { [key in BetStatus]: { border: string; hover: string; } 
   [BetStatus.LOST]: { border: 'border-l-4 border-red-500', hover: 'hover:bg-red-900/40' },
 };
 
-export const BetItem: React.FC<BetItemProps> = ({ bet, onUpdateStatus, onDelete, onEdit, isUpdating }) => {
+export const BetItem: React.FC<BetItemProps> = ({ bet, startBalance, endingBalance, onUpdateStatus, onDelete, onEdit, isUpdating }) => {
   const pillStyle = statusPillStyles[bet.status];
   const rowStyle = statusRowStyles[bet.status];
 
@@ -52,6 +54,9 @@ export const BetItem: React.FC<BetItemProps> = ({ bet, onUpdateStatus, onDelete,
       <td className="p-4 align-top text-sm text-gray-400 whitespace-nowrap">
         {formattedDate}
       </td>
+      <td className="p-4 align-top text-right text-gray-400 whitespace-nowrap">
+        ₱{startBalance !== undefined ? startBalance.toFixed(2) : '-'}
+      </td>
       <td className="p-4 align-top text-right text-gray-300 whitespace-nowrap">
         ₱{bet.stake.toFixed(2)}
       </td>
@@ -60,6 +65,9 @@ export const BetItem: React.FC<BetItemProps> = ({ bet, onUpdateStatus, onDelete,
       </td>
       <td className="p-4 align-top text-right text-gray-300 whitespace-nowrap">
         ₱{(bet.stake * bet.odds).toFixed(2)}
+      </td>
+      <td className="p-4 align-top text-right text-gray-300 whitespace-nowrap font-medium">
+        ₱{endingBalance !== undefined ? endingBalance.toFixed(2) : '-'}
       </td>
       <td className="p-4 align-top text-center">
         <div className={`flex items-center justify-center space-x-2 px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${pillStyle.bg} ${pillStyle.text}`}>
